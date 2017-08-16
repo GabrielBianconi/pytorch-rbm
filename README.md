@@ -1,2 +1,3 @@
-# pytorch-rbm
-Restricted Boltzmann Machine Implementation in PyTorch
+# PyTorch Implementation of Restricted Boltzmann Machines
+
+> **Author:** [Gabriel Bianconi](http://www.gabrielbianconi.com/)
