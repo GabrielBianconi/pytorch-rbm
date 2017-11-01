@@ -42,7 +42,7 @@ class RBM():
     def contrastive_divergence(self, input_data):
         # Positive phase
         positive_hidden_probabilities = self.sample_hidden(input_data)
-        positive_hidden_activations = (positive_hidden_probabilities >= self._random_probabilities(self.num_hidden)).type(torch.FloatTensor)
+        positive_hidden_activations = (positive_hidden_probabilities >= self._random_probabilities(self.num_hidden)).float()
         positive_associations = torch.matmul(input_data.t(), positive_hidden_activations)
 
         # Negative phase
@@ -51,7 +51,7 @@ class RBM():
         for step in range(self.k):
             visible_probabilities = self.sample_visible(hidden_activations)
             hidden_probabilities = self.sample_hidden(visible_probabilities)
-            hidden_activations = (hidden_probabilities >= self._random_probabilities(self.num_hidden)).type(torch.FloatTensor)
+            hidden_activations = (hidden_probabilities >= self._random_probabilities(self.num_hidden)).float()
 
         negative_visible_probabilities = visible_probabilities
         negative_hidden_probabilities = hidden_probabilities
