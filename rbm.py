@@ -42,22 +42,19 @@ class RBM():
     def contrastive_divergence(self, input_data):
         # Positive phase
         positive_hidden_probabilities = self.sample_hidden(input_data)
-
-        random_probabilities = torch.rand(self.num_hidden)
-
-        if self.use_cuda:
-            random_probabilities = random_probabilities.cuda()
-
-        positive_hidden_activations = (positive_hidden_probabilities >= random_probabilities)
-
-        positive_associations = torch.matmul(input_data.t(), positive_hidden_probabilities)
+        positive_hidden_activations = (positive_hidden_probabilities >= self._random_probabilities(self.num_hidden)).type(torch.FloatTensor)
+        positive_associations = torch.matmul(input_data.t(), positive_hidden_activations)
 
         # Negative phase
-        negative_hidden_probabilities = positive_hidden_probabilities
+        hidden_activations = positive_hidden_activations
 
         for step in range(self.k):
-            negative_visible_probabilities = self.sample_visible(negative_hidden_probabilities)
-            negative_hidden_probabilities = self.sample_hidden(negative_visible_probabilities)
+            visible_probabilities = self.sample_visible(hidden_activations)
+            hidden_probabilities = self.sample_hidden(visible_probabilities)
+            hidden_activations = (hidden_probabilities >= self._random_probabilities(self.num_hidden)).type(torch.FloatTensor)
+
+        negative_visible_probabilities = visible_probabilities
+        negative_hidden_probabilities = hidden_probabilities
 
         negative_associations = torch.matmul(negative_visible_probabilities.t(), negative_hidden_probabilities)
 
@@ -86,4 +83,13 @@ class RBM():
 
     def _sigmoid(self, x):
         return 1 / (1 + torch.exp(-x))
+
+    def _random_probabilities(self, num):
+        random_probabilities = torch.rand(num)
+
+        if self.use_cuda:
+            random_probabilities = random_probabilities.cuda()
+
+        return random_probabilities
+
 

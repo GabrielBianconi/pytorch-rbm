@@ -37,7 +37,7 @@ test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE)
 ########## TRAINING RBM ##########
 print('Training RBM...')
 
-rbm = RBM(VISIBLE_UNITS, HIDDEN_UNITS, CD_K)
+rbm = RBM(VISIBLE_UNITS, HIDDEN_UNITS, CD_K, use_cuda=CUDA)
 
 for epoch in range(EPOCHS):
     epoch_error = 0.0
@@ -89,5 +89,5 @@ clf = LogisticRegression()
 clf.fit(train_features, train_labels)
 predictions = clf.predict(test_features)
 
-print('Result:', sum(predictions == test_labels), '/', test_labels.shape[0])
+print('Result: %d/%d' % (sum(predictions == test_labels), test_labels.shape[0]))
 
