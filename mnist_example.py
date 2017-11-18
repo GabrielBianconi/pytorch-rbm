@@ -17,7 +17,7 @@ EPOCHS = 10
 
 DATA_FOLDER = 'data/mnist'
 
-CUDA = True
+CUDA = torch.cuda.is_available()
 CUDA_DEVICE = 0
 
 if CUDA:
